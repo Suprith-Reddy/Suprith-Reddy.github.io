@@ -4,6 +4,7 @@
   "description": "Flash — a minimalist, offline-first flashcards PWA.",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.18.0",
   "engines": {
     "node": "^20.19 || >=22.12"
   },
