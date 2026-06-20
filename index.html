@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!--
+      Content-Security-Policy (defense-in-depth for imported-card HTML).
+      Cards may be imported from shared JSON files, so rendered card HTML is also
+      sanitized at runtime by DOMPurify (T1.4). This meta CSP is a second layer.
+        - default to 'self'; no remote origins
+        - scripts: 'self' only (Vite emits external JS; Svelte 5 compiles away — no inline scripts)
+        - styles: 'self' + 'unsafe-inline' (Svelte scoped styles / tokens)
+        - img: 'self' data: blob: (icons / future inlined assets)
+        - connect/worker: 'self' (service worker, precache fetches)
+        - blob: in img-src / object covers download Blobs (export)
+        - no remote scripts, no object/embed, base-uri locked
+
+      NOTE on framing protection: `frame-ancestors` is IGNORED by browsers when a
+      CSP is delivered via <meta http-equiv> — it only takes effect as a real HTTP
+      response header, which GitHub Pages cannot set. It is therefore deliberately
+      OMITTED here (leaving it in would be a no-op that falsely implies protection).
+      Clickjacking/frame-embedding protection is instead enforced at runtime by a
+      JS frame-busting guard in src/main.ts (`if (self !== top) top.location = ...`).
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    />
+
+    <meta name="theme-color" content="#111827" />
+    <title>Flash</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
